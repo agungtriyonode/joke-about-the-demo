@@ -1,30 +1,26 @@
-// SPDX-License-Identifier: MIT
-import { mkdirSync, writeFileSync } from "node:fs";
+import * as fs from "node:fs";
 
-const OUTPUT_DIR = "/output";
-const OUTPUT_FILE = "/output/entry.txt";
+const dirKeluar = "/output";
+const berkasKeluar = "/output/entry.txt";
 
-const JOKE =
-  'My AI coding agent said, "Bug fixed." I asked, "Which bug?" It replied, "The one I created while fixing the last one."';
+const lelucon = 'My AI coding agent said, "Bug fixed." I asked, "Which bug?" It replied, "The one I created while fixing the last one."';
 
-function main(): number {
-  const length = [...JOKE].length;
-  if (length < 1 || length > 280) {
-    console.error(`Panjang tidak valid: ${length} (harus 1-280)`);
-    return 1;
-  }
-  if (/[\r\n]/.test(JOKE)) {
-    console.error("Lelucon harus satu baris, tanpa newline");
-    return 1;
-  }
-  try {
-    mkdirSync(OUTPUT_DIR, { recursive: true });
-    writeFileSync(OUTPUT_FILE, JOKE, { encoding: "utf8" });
-  } catch (err) {
-    console.error("Gagal menulis entry.txt:", err);
-    return 1;
-  }
-  return 0;
+const jumlahHuruf = Array.from(lelucon).length;
+
+if (jumlahHuruf === 0 || jumlahHuruf > 280) {
+  console.error("Jumlah karakter lelucon tidak sesuai aturan (1-280): " + jumlahHuruf);
+  process.exit(1);
 }
 
-process.exit(main());
+if (lelucon.includes("\n") || lelucon.includes("\r")) {
+  console.error("Lelucon tidak boleh mengandung baris baru.");
+  process.exit(1);
+}
+
+try {
+  fs.mkdirSync(dirKeluar, { recursive: true });
+  fs.writeFileSync(berkasKeluar, lelucon, "utf8");
+} catch (galat) {
+  console.error("Gagal menyimpan lelucon:", galat);
+  process.exit(1);
+}
